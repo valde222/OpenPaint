@@ -1,8 +1,8 @@
-import screens.paintScreen;
+import screens.PaintScreen;
 
 public class Main {
     public static void main(String[] args) {
 
-        new paintScreen();
+        new PaintScreen();
     }
 }
