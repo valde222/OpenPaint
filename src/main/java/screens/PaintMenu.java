@@ -3,6 +3,7 @@ package screens;
 import managers.StrokeManager;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
 
 public class PaintMenu {
@@ -67,12 +68,43 @@ public class PaintMenu {
         lineThicknessChooser.setPaintTicks(true);
         lineThicknessChooser.setMinimumSize(lineThicknessChooser.getPreferredSize());
 
+        lineThicknessChooser.setUI(getSliderThumb());
+
         lineThicknessChooser.addChangeListener(e -> {
             int selectedThickness = lineThicknessChooser.getValue();
             strokeManager.setLineThickness(selectedThickness);
             lineThicknessLabel.setText("Line Thickness: " + selectedThickness);
         });
         return lineThicknessChooser;
+    }
+
+    private static BasicSliderUI getSliderThumb() {
+        return new BasicSliderUI() {
+            @Override
+            public void paintThumb(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+
+                int[] xPoints = {
+                        thumbRect.x + thumbRect.width / 2,  // Top/middle point (center horizontally)
+                        thumbRect.x,                        // Bottom-left corner
+                        thumbRect.x + thumbRect.width       // Bottom-right corner
+                };
+
+                int[] yPoints = {
+                        thumbRect.y + thumbRect.height,     // Bottom/middle (point down)
+                        thumbRect.y,                        // Top-left
+                        thumbRect.y                         // Top-right
+                };
+
+                Polygon triangle = new Polygon(xPoints, yPoints, 3);
+                g2.setClip(triangle);
+                g2.setColor(new Color(78, 78, 78));
+                g2.fillPolygon(triangle);
+
+                g2.drawPolygon(triangle);
+                g2.dispose();
+            }
+        };
     }
 
     public JPanel getMenuPanel() {
