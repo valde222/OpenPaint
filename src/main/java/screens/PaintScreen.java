@@ -4,14 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import managers.KeystrokeManager;
 import managers.StrokeManager;
 
 public class PaintScreen extends JFrame {
 
     private final JPanel drawingPanel;
     StrokeManager strokeManager = StrokeManager.getInstance();
-    KeystrokeManager keystrokeManager = KeystrokeManager.getInstance();
 
     public PaintScreen() {
         drawingPanel = new JPanel() {
