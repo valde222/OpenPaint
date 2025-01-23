@@ -52,17 +52,6 @@ public class PaintScreen extends JFrame {
         });
 
         drawingPanel.setFocusable(true);
-        drawingPanel.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                keystrokeManager.onKeyDown(e);
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                keystrokeManager.onKeyUp(e);
-            }
-        });
     }
 
     public JPanel getDrawingPanel() {

@@ -4,13 +4,11 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.HashSet;
 
 public class KeystrokeManager {
 
     private static KeystrokeManager instance;
     StrokeManager strokeManager = StrokeManager.getInstance();
-    private final HashSet<Integer> keyStates = new HashSet<>();
 
     private KeystrokeManager() {}
 
@@ -34,13 +32,4 @@ public class KeystrokeManager {
             }
         });
     }
-
-    public void onKeyDown(KeyEvent e) {
-        keyStates.add(e.getKeyCode());
-    }
-
-    public void onKeyUp(KeyEvent e) {
-        keyStates.remove(e.getKeyCode());
-    }
-
 }
