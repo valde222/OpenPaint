@@ -3,84 +3,76 @@ package screens;
 import managers.StrokeManager;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class PaintMenu {
 
     private static final int SCREEN_WIDTH = 1600;
-    private static final int MAX_LINE_THICKNESS = 30;
-    private static final int MIN_LINE_THICKNESS = 1;
-    private final int lineThickness = 3;
+    private static final int MENU_HEIGHT = 100;
 
     StrokeManager strokeManager = StrokeManager.getInstance();
 
     JPanel menuPanel;
+    JPanel parentPanel;
 
     public PaintMenu() {
-        menuPanel = new JPanel(new BorderLayout());
-        menuPanel.setPreferredSize(new Dimension(SCREEN_WIDTH, 100));
+        menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        menuPanel.setPreferredSize(new Dimension(SCREEN_WIDTH, MENU_HEIGHT));
 
-        JTextArea lineThicknessTextArea = createLineThicknessTextArea();
-        JScrollPane scrollPane = new JScrollPane(lineThicknessTextArea);
-
-        menuPanel.add(scrollPane, BorderLayout.CENTER);
+        menuPanel.add(createLineThicknessPanel());
+        parentPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gridBagConstraints = getGridBagConstraints();
+        parentPanel.setBackground(Color.LIGHT_GRAY);
+        
+        parentPanel.add(menuPanel, gridBagConstraints);
     }
 
-    private JTextArea createLineThicknessTextArea() {
-        JTextArea lineThicknessTextArea = new JTextArea();
-        lineThicknessTextArea.setLineWrap(true);
-        lineThicknessTextArea.setWrapStyleWord(true);
-        lineThicknessTextArea.setFont(new Font("Arial", Font.PLAIN, 14));
-
-        addLineThicknessDocumentListener(lineThicknessTextArea);
-
-        return lineThicknessTextArea;
+    private GridBagConstraints getGridBagConstraints() {
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.insets = new Insets(0, 20, 0, 0);
+        return gridBagConstraints;
     }
 
-    private void addLineThicknessDocumentListener(JTextArea textArea) {
-        textArea.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateLineThickness(textArea);
-            }
+    private JPanel createLineThicknessPanel() {
+        final JComboBox<Integer> lineThicknessChooser = getLineThicknessDropdown();
+        JLabel lineThicknessLabel = new JLabel("Line Thickness:");
+        lineThicknessLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateLineThickness(textArea);
-            }
+        JPanel lineThicknessPanel = new JPanel();
+        lineThicknessPanel.setLayout(new BoxLayout(lineThicknessPanel, BoxLayout.Y_AXIS));
+        lineThicknessPanel.add(lineThicknessLabel);
+        lineThicknessPanel.add(Box.createVerticalStrut(5));
+        lineThicknessPanel.add(lineThicknessChooser);
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updateLineThickness(textArea);
+        return lineThicknessPanel;
+    }
+
+    private JComboBox<Integer> getLineThicknessDropdown() {
+        Integer[] choices = { 1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32 };
+
+        final JComboBox<Integer> lineThicknessChooser = new JComboBox<>(choices);
+
+        Dimension preferredSize = lineThicknessChooser.getPreferredSize();
+        lineThicknessChooser.setMaximumSize(preferredSize);
+        lineThicknessChooser.setPreferredSize(preferredSize);
+        lineThicknessChooser.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        lineThicknessChooser.addActionListener(e -> {
+            Integer selectedThickness = (Integer) lineThicknessChooser.getSelectedItem();
+            if (selectedThickness != null) {
+                strokeManager.setLineThickness(selectedThickness);
             }
         });
-    }
-
-    private void updateLineThickness(JTextArea textArea) {
-        String text = textArea.getText().trim();
-        if (text.isEmpty()) {
-            return;
-        }
-        try {
-            int newThickness = Integer.parseInt(text);
-            if (newThickness >= MIN_LINE_THICKNESS && newThickness <= MAX_LINE_THICKNESS) {
-                strokeManager.setLineThickness(newThickness);
-            } else {
-                restorePreviousLineThickness(textArea);
-            }
-        } catch (NumberFormatException e) {
-            restorePreviousLineThickness(textArea);
-        }
-    }
-
-    private void restorePreviousLineThickness(JTextArea textArea) {
-        SwingUtilities.invokeLater(() -> textArea.setText(String.valueOf(lineThickness)));
+        return lineThicknessChooser;
     }
 
     public JPanel getMenuPanel() {
-        return menuPanel;
+        return parentPanel;
     }
 
 }
