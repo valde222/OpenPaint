@@ -39,10 +39,11 @@ public class PaintMenu {
     }
 
     private JPanel createLineThicknessPanel() {
-        final JComboBox<Integer> lineThicknessChooser = getLineThicknessDropdown();
-        JLabel lineThicknessLabel = new JLabel("Line Thickness:");
+
+        JLabel lineThicknessLabel = new JLabel("Line Thickness: 3");
         lineThicknessLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        final JSlider lineThicknessChooser = getLineThicknessSlider(lineThicknessLabel);
         JPanel lineThicknessPanel = new JPanel();
         lineThicknessPanel.setLayout(new BoxLayout(lineThicknessPanel, BoxLayout.Y_AXIS));
         lineThicknessPanel.add(lineThicknessLabel);
@@ -52,21 +53,24 @@ public class PaintMenu {
         return lineThicknessPanel;
     }
 
-    private JComboBox<Integer> getLineThicknessDropdown() {
-        Integer[] choices = { 1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32 };
+    private JSlider getLineThicknessSlider(JLabel lineThicknessLabel) {
 
-        final JComboBox<Integer> lineThicknessChooser = new JComboBox<>(choices);
+        int LINE_THICKNESS_MIN = 1;
+        int LINE_THICKNESS_MAX = 50;
+        int LINE_THICKNESS_INIT = 3;
 
-        Dimension preferredSize = lineThicknessChooser.getPreferredSize();
-        lineThicknessChooser.setMaximumSize(preferredSize);
-        lineThicknessChooser.setPreferredSize(preferredSize);
+        final JSlider lineThicknessChooser = new JSlider(SwingConstants.HORIZONTAL, LINE_THICKNESS_MIN, LINE_THICKNESS_MAX, LINE_THICKNESS_INIT);
+
         lineThicknessChooser.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lineThicknessChooser.setMinorTickSpacing(1);
+        lineThicknessChooser.setMajorTickSpacing(10);
+        lineThicknessChooser.setPaintTicks(true);
+        lineThicknessChooser.setMinimumSize(lineThicknessChooser.getPreferredSize());
 
-        lineThicknessChooser.addActionListener(e -> {
-            Integer selectedThickness = (Integer) lineThicknessChooser.getSelectedItem();
-            if (selectedThickness != null) {
-                strokeManager.setLineThickness(selectedThickness);
-            }
+        lineThicknessChooser.addChangeListener(e -> {
+            int selectedThickness = lineThicknessChooser.getValue();
+            strokeManager.setLineThickness(selectedThickness);
+            lineThicknessLabel.setText("Line Thickness: " + selectedThickness);
         });
         return lineThicknessChooser;
     }
