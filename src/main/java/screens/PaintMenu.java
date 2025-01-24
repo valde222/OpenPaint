@@ -1,16 +1,17 @@
 package screens;
 
-import managers.StrokeManager;
+import Interfaces.MenuItemProducer;
+import screens.menuItems.ColorPickerMenuItem;
+import screens.menuItems.LineThicknessMenuItem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class PaintMenu {
 
     private static final int SCREEN_WIDTH = 1600;
     private static final int MENU_HEIGHT = 100;
-
-    StrokeManager strokeManager = StrokeManager.getInstance();
 
     JPanel menuPanel;
     JPanel parentPanel;
@@ -19,7 +20,15 @@ public class PaintMenu {
         menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
         menuPanel.setPreferredSize(new Dimension(SCREEN_WIDTH, MENU_HEIGHT));
 
-        menuPanel.add(createLineThicknessPanel());
+        List<MenuItemProducer> menuItems = List.of(
+                new LineThicknessMenuItem(),
+                new ColorPickerMenuItem()
+        );
+
+        for (MenuItemProducer menuItem : menuItems) {
+            menuPanel.add(menuItem.createMenuPanel());
+        }
+
         parentPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gridBagConstraints = getGridBagConstraints();
         parentPanel.setBackground(Color.LIGHT_GRAY);
@@ -36,39 +45,6 @@ public class PaintMenu {
         gridBagConstraints.anchor = GridBagConstraints.WEST;
         gridBagConstraints.insets = new Insets(0, 20, 0, 0);
         return gridBagConstraints;
-    }
-
-    private JPanel createLineThicknessPanel() {
-        final JComboBox<Integer> lineThicknessChooser = getLineThicknessDropdown();
-        JLabel lineThicknessLabel = new JLabel("Line Thickness:");
-        lineThicknessLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPanel lineThicknessPanel = new JPanel();
-        lineThicknessPanel.setLayout(new BoxLayout(lineThicknessPanel, BoxLayout.Y_AXIS));
-        lineThicknessPanel.add(lineThicknessLabel);
-        lineThicknessPanel.add(Box.createVerticalStrut(5));
-        lineThicknessPanel.add(lineThicknessChooser);
-
-        return lineThicknessPanel;
-    }
-
-    private JComboBox<Integer> getLineThicknessDropdown() {
-        Integer[] choices = { 1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32 };
-
-        final JComboBox<Integer> lineThicknessChooser = new JComboBox<>(choices);
-
-        Dimension preferredSize = lineThicknessChooser.getPreferredSize();
-        lineThicknessChooser.setMaximumSize(preferredSize);
-        lineThicknessChooser.setPreferredSize(preferredSize);
-        lineThicknessChooser.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        lineThicknessChooser.addActionListener(e -> {
-            Integer selectedThickness = (Integer) lineThicknessChooser.getSelectedItem();
-            if (selectedThickness != null) {
-                strokeManager.setLineThickness(selectedThickness);
-            }
-        });
-        return lineThicknessChooser;
     }
 
     public JPanel getMenuPanel() {

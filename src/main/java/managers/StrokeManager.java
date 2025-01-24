@@ -7,9 +7,10 @@ public class StrokeManager {
 
     private static StrokeManager instance;
 
-    private final ArrayList<ArrayList<Point>> strokes = new ArrayList<>();
-    private ArrayList<Point> currentStroke;
-    private int lineThickness = 3;
+    private final ArrayList<StrokeData> strokes = new ArrayList<>();
+    private StrokeData currentStroke;
+
+    private final StrokeProperty defaultStrokeProperty = new StrokeProperty();
 
     private StrokeManager() {}
 
@@ -21,9 +22,12 @@ public class StrokeManager {
     }
 
     public void startStroke(Point initialPoint) {
-        currentStroke = new ArrayList<>();
-        currentStroke.add(new Point(lineThickness, 0));
-        currentStroke.add(initialPoint);
+        // Create a new stroke with a copy of the current default properties
+        currentStroke = new StrokeData(new ArrayList<>(), new StrokeProperty(
+                defaultStrokeProperty.getLineThickness(),
+                defaultStrokeProperty.getStrokeColor()
+        ));
+        currentStroke.addPoint(initialPoint);
         strokes.add(currentStroke);
     }
 
@@ -33,7 +37,7 @@ public class StrokeManager {
 
     public void addPointToStroke(Point point) {
         if (currentStroke != null) {
-            currentStroke.add(point);
+            currentStroke.addPoint(point);
         }
     }
 
@@ -45,24 +49,31 @@ public class StrokeManager {
 
     public void drawStrokes(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.BLACK);
 
-        for (ArrayList<Point> stroke : strokes) {
+        for (StrokeData stroke : strokes) {
+            StrokeProperty props = stroke.getStrokeProperty();
+            g2d.setColor(props.getStrokeColor());
             g2d.setStroke(new BasicStroke(
-                    stroke.getFirst().x,
+                    props.getLineThickness(),
                     BasicStroke.CAP_ROUND,
                     BasicStroke.JOIN_ROUND
             ));
-            for (int i = 2; i < stroke.size(); i++) {
-                Point p1 = stroke.get(i - 1);
-                Point p2 = stroke.get(i);
+
+            java.util.List<Point> points = stroke.getPoints();
+            for (int i = 1; i < points.size(); i++) {
+                Point p1 = points.get(i - 1);
+                Point p2 = points.get(i);
                 g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
         }
     }
 
+    // Global property setters for default stroke properties
     public void setLineThickness(int lineThickness) {
-        this.lineThickness = lineThickness;
+        defaultStrokeProperty.setLineThickness(lineThickness);
     }
 
+    public void setStrokeColor(Color strokeColor) {
+        defaultStrokeProperty.setStrokeColor(strokeColor);
+    }
 }
