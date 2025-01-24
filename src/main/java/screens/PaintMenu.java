@@ -1,6 +1,7 @@
 package screens;
 
 import Interfaces.MenuItemProducer;
+import screens.menuItems.ColorPickerMenuItem;
 import screens.menuItems.LineThicknessMenuItem;
 
 import javax.swing.*;
@@ -20,7 +21,8 @@ public class PaintMenu {
         menuPanel.setPreferredSize(new Dimension(SCREEN_WIDTH, MENU_HEIGHT));
 
         List<MenuItemProducer> menuItems = List.of(
-                new LineThicknessMenuItem()
+                new LineThicknessMenuItem(),
+                new ColorPickerMenuItem()
         );
 
         for (MenuItemProducer menuItem : menuItems) {
