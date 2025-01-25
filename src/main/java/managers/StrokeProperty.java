@@ -4,12 +4,12 @@ import java.awt.*;
 
 public class StrokeProperty {
 
-    private int lineThickness; // Property for line thickness
-    private Color strokeColor; // Property for stroke color
+    private int lineThickness;
+    private Color strokeColor;
 
     public StrokeProperty() {
-        this.lineThickness = 3; // Default value
-        this.strokeColor = Color.BLACK; // Default color
+        this.lineThickness = 3;
+        this.strokeColor = Color.BLACK;
     }
 
     public StrokeProperty(int lineThickness, Color strokeColor) {

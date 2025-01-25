@@ -3,6 +3,7 @@ package screens;
 import Interfaces.MenuItemProducer;
 import screens.menuItems.ColorPickerMenuItem;
 import screens.menuItems.LineThicknessMenuItem;
+import screens.menuItems.BrushSelectorMenuItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +26,8 @@ public class PaintMenu {
 
         List<MenuItemProducer> menuItems = List.of(
                 new LineThicknessMenuItem(),
-                new ColorPickerMenuItem()
+                new ColorPickerMenuItem(),
+                new BrushSelectorMenuItem()
         );
 
         for (MenuItemProducer menuItem : menuItems) {
