@@ -6,6 +6,17 @@ import java.awt.*;
 
 public class LineThicknessMenuItem extends AbstractMenuItem {
 
+    private static final int LINE_THICKNESS_MIN = 1;
+    private static final int LINE_THICKNESS_MAX = 50;
+    private static final int LINE_THICKNESS_INIT = 3;
+    private static final int SLIDER_MINOR_TICK_GAP = 1;
+    private static final int SLIDER_MAJOR_TICK_GAP = 10;
+    private static final int SLIDER_MAX_WIDTH = 300;
+    private static final int SLIDER_MAX_HEIGHT = 40;
+    private static final int PANEL_MAX_WIDTH = 350;
+    private static final int PANEL_MAX_HEIGHT = 60;
+
+
     @Override
     public JPanel createMenuPanel() {
 
@@ -19,20 +30,21 @@ public class LineThicknessMenuItem extends AbstractMenuItem {
         lineThicknessPanel.add(Box.createVerticalStrut(5));
         lineThicknessPanel.add(lineThicknessChooser);
 
+        Dimension preferredSizeSlider = new Dimension(SLIDER_MAX_WIDTH, SLIDER_MAX_HEIGHT);
+        Dimension preferredSizePanel = new Dimension(PANEL_MAX_WIDTH, PANEL_MAX_HEIGHT);
+        lineThicknessChooser.setMaximumSize(preferredSizeSlider);
+        lineThicknessPanel.setMaximumSize(preferredSizePanel);
+
         return lineThicknessPanel;
     }
 
     private JSlider getLineThicknessSlider(JLabel lineThicknessLabel) {
 
-        int LINE_THICKNESS_MIN = 1;
-        int LINE_THICKNESS_MAX = 50;
-        int LINE_THICKNESS_INIT = 3;
-
         final JSlider lineThicknessChooser = new JSlider(SwingConstants.HORIZONTAL, LINE_THICKNESS_MIN, LINE_THICKNESS_MAX, LINE_THICKNESS_INIT);
 
         lineThicknessChooser.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lineThicknessChooser.setMinorTickSpacing(1);
-        lineThicknessChooser.setMajorTickSpacing(10);
+        lineThicknessChooser.setMinorTickSpacing(SLIDER_MINOR_TICK_GAP);
+        lineThicknessChooser.setMajorTickSpacing(SLIDER_MAJOR_TICK_GAP);
         lineThicknessChooser.setPaintTicks(true);
         lineThicknessChooser.setMinimumSize(lineThicknessChooser.getPreferredSize());
 
