@@ -29,9 +29,7 @@ public class PaintScreen extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 strokeManager.startStroke(e.getPoint());
-                if ("FREEHAND".equals(strokeManager.getBrushType())) {
-                    strokeManager.addPointToStroke(e.getPoint());
-                }
+                strokeManager.updateStroke(e.getPoint());
                 drawingPanel.repaint();
             }
 
@@ -45,12 +43,7 @@ public class PaintScreen extends JFrame {
         drawingPanel.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if ("FREEHAND".equals(strokeManager.getBrushType())) {
-                    strokeManager.addPointToStroke(e.getPoint());
-                } else if ("STRAIGHT_LINE".equals(strokeManager.getBrushType())) {
-                    // Update the temporary endpoint for line preview
-                    strokeManager.updateTemporaryEndPoint(e.getPoint());
-                }
+                strokeManager.updateStroke(e.getPoint());
                 drawingPanel.repaint();
             }
         });
