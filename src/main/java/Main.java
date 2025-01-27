@@ -1,4 +1,3 @@
-import managers.StrokeManager;
 import screens.MainPanel;
 
 public class Main {

@@ -28,6 +28,11 @@ public class PaintScreen extends JFrame {
         drawingPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if (strokeManager.getMoveToolActive()) {
+                    strokeManager.moveStrokeStart(e.getPoint());
+                    drawingPanel.repaint();
+                    return;
+                }
                 strokeManager.startStroke(e.getPoint());
                 strokeManager.updateStroke(e.getPoint());
                 drawingPanel.repaint();
@@ -35,6 +40,10 @@ public class PaintScreen extends JFrame {
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                if (strokeManager.getMoveToolActive()) {
+                    drawingPanel.repaint();
+                    return;
+                }
                 strokeManager.endStroke();
                 drawingPanel.repaint();
             }
@@ -43,6 +52,11 @@ public class PaintScreen extends JFrame {
         drawingPanel.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                if (strokeManager.getMoveToolActive()) {
+                    strokeManager.moveStroke(e.getPoint());
+                    drawingPanel.repaint();
+                    return;
+                }
                 strokeManager.updateStroke(e.getPoint());
                 drawingPanel.repaint();
             }

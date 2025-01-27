@@ -4,6 +4,7 @@ import Interfaces.MenuItemProducer;
 import screens.menuItems.ColorPickerMenuItem;
 import screens.menuItems.LineThicknessMenuItem;
 import screens.menuItems.BrushSelectorMenuItem;
+import screens.menuItems.MoveToolMenuMenuItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,8 @@ public class PaintMenu {
         List<MenuItemProducer> menuItems = List.of(
                 new LineThicknessMenuItem(),
                 new ColorPickerMenuItem(),
-                new BrushSelectorMenuItem()
+                new BrushSelectorMenuItem(),
+                new MoveToolMenuMenuItem()
         );
 
         for (MenuItemProducer menuItem : menuItems) {

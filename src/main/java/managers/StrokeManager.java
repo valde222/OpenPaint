@@ -16,6 +16,9 @@ public class StrokeManager {
 
     private BrushType brushType = BrushType.FREEHAND;
 
+    private Boolean MoveToolActive = false;
+    private StrokeData selectedStroke;
+
     private StrokeManager() {}
 
     public static StrokeManager getInstance() {
@@ -90,11 +93,43 @@ public class StrokeManager {
         }
     }
 
+    public void moveStrokeStart(Point point) {
+        int threshold = 10;
+        for (StrokeData stroke : strokes) {
+            for (Point p : stroke.getPoints()) {
+                if (p.distance(point) <= threshold) {
+                    System.out.println("Stroke moved");
+                    selectedStroke = stroke;
+                    return;
+                }
+            }
+        }
+    }
+
+    public void moveStroke(Point point) {
+        if (selectedStroke != null) {
+            for (Point p : selectedStroke.getPoints()) {
+                int pointDifferenceX = point.x - p.x;
+                int pointDifferenceY = point.y - p.y;
+                System.out.println("Point difference: " + pointDifferenceX + ", " + pointDifferenceY);
+                p.setLocation(p.x + pointDifferenceX, p.y + pointDifferenceY);
+            }
+        }
+    }
+
     public void setLineThickness(int lineThickness) {
         defaultStrokeProperty.setLineThickness(lineThickness);
     }
 
     public void setStrokeColor(Color strokeColor) {
         defaultStrokeProperty.setStrokeColor(strokeColor);
+    }
+
+    public void setMoveToolActive(Boolean MoveToolActive) {
+        this.MoveToolActive = MoveToolActive;
+    }
+
+    public Boolean getMoveToolActive() {
+        return MoveToolActive;
     }
 }
