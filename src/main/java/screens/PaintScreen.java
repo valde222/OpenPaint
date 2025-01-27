@@ -20,11 +20,11 @@ public class PaintScreen extends JFrame {
             }
         };
 
-        addDrawingListeners(drawingPanel);
+        addDrawingListeners();
     }
 
 
-    private void addDrawingListeners(JPanel drawingPanel) {
+    private void addDrawingListeners() {
         drawingPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
