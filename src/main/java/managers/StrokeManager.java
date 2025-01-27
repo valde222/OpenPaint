@@ -3,7 +3,9 @@ package managers;
 import brushes.BrushType;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.List;
 
 public class StrokeManager {
 
@@ -18,6 +20,8 @@ public class StrokeManager {
 
     private Boolean MoveToolActive = false;
     private StrokeData selectedStroke;
+    private Point initialPoint;
+    private List<Point> initialPoints;
 
     private StrokeManager() {}
 
@@ -94,27 +98,62 @@ public class StrokeManager {
     }
 
     public void moveStrokeStart(Point point) {
-        int threshold = 10;
         for (StrokeData stroke : strokes) {
-            for (Point p : stroke.getPoints()) {
-                if (p.distance(point) <= threshold) {
-                    System.out.println("Stroke moved");
-                    selectedStroke = stroke;
-                    return;
+            if (isPointOnStroke(point, stroke)) {
+                selectedStroke = stroke;
+                initialPoint = point;
+                initialPoints = new ArrayList<>();
+                for (Point p : stroke.getPoints()) {
+                    initialPoints.add(new Point(p));
                 }
+                return;
             }
         }
     }
 
     public void moveStroke(Point point) {
-        if (selectedStroke != null) {
-            for (Point p : selectedStroke.getPoints()) {
-                int pointDifferenceX = point.x - p.x;
-                int pointDifferenceY = point.y - p.y;
-                System.out.println("Point difference: " + pointDifferenceX + ", " + pointDifferenceY);
-                p.setLocation(p.x + pointDifferenceX, p.y + pointDifferenceY);
+        if (selectedStroke != null && initialPoint != null) {
+            int pointDifferenceX = point.x - initialPoint.x;
+            int pointDifferenceY = point.y - initialPoint.y;
+            List<Point> points = selectedStroke.getPoints();
+            for (int i = 0; i < points.size(); i++) {
+                Point initialP = initialPoints.get(i);
+                points.get(i).setLocation(initialP.x + pointDifferenceX, initialP.y + pointDifferenceY);
             }
         }
+    }
+
+    public void moveStrokeEnd() {
+        selectedStroke = null;
+        initialPoint = null;
+        initialPoints = null;
+    }
+
+    public boolean isPointOnStroke(Point point) {
+        for (StrokeData stroke : strokes) {
+            if (isPointOnStroke(point, stroke)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isPointOnStroke(Point point, StrokeData stroke) {
+        int threshold = 10;
+        List<Point> points = stroke.getPoints();
+        for (int i = 1; i < points.size(); i++) {
+            Point p1 = points.get(i - 1);
+            Point p2 = points.get(i);
+            if (isPointNearLine(point, p1, p2, threshold)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isPointNearLine(Point p, Point p1, Point p2, int threshold) {
+        double distance = Line2D.ptSegDist(p1.x, p1.y, p2.x, p2.y, p.x, p.y);
+        return distance <= threshold;
     }
 
     public void setLineThickness(int lineThickness) {

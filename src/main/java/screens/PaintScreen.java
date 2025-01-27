@@ -41,6 +41,7 @@ public class PaintScreen extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (strokeManager.getMoveToolActive()) {
+                    strokeManager.moveStrokeEnd();
                     drawingPanel.repaint();
                     return;
                 }
@@ -59,8 +60,18 @@ public class PaintScreen extends JFrame {
                 }
                 strokeManager.updateStroke(e.getPoint());
                 drawingPanel.repaint();
+
+            }
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (strokeManager.getMoveToolActive() && strokeManager.isPointOnStroke(e.getPoint())) {
+                    drawingPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                } else {
+                    drawingPanel.setCursor(Cursor.getDefaultCursor());
+                }
             }
         });
+
 
         drawingPanel.setFocusable(true);
     }
