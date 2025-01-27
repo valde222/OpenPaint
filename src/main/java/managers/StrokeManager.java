@@ -78,6 +78,10 @@ public class StrokeManager {
         if (currentStroke != null) {
             drawStroke(g2d, currentStroke);
         }
+
+        if (selectedStroke != null) {
+            drawSelectionBox(g2d, selectedStroke);
+        }
     }
 
     private void drawStroke(Graphics2D g2d, StrokeData stroke) {
@@ -95,6 +99,20 @@ public class StrokeManager {
             Point p2 = points.get(i);
             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
         }
+    }
+
+    private void drawSelectionBox(Graphics2D g2d, StrokeData stroke) {
+        List<Point> points = stroke.getPoints();
+        if (points.isEmpty()) return;
+
+        int minX = points.stream().mapToInt(p -> p.x).min().orElse(0);
+        int minY = points.stream().mapToInt(p -> p.y).min().orElse(0);
+        int maxX = points.stream().mapToInt(p -> p.x).max().orElse(0);
+        int maxY = points.stream().mapToInt(p -> p.y).max().orElse(0);
+
+        g2d.setColor(Color.LIGHT_GRAY);
+        g2d.setStroke(new BasicStroke(1));
+        g2d.drawRect(minX - 5, minY - 5, (maxX - minX) + 10, (maxY - minY) + 10);
     }
 
     public void moveStrokeStart(Point point) {
