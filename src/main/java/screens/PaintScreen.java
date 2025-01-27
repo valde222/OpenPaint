@@ -35,7 +35,7 @@ public class PaintScreen extends JFrame {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                strokeManager.endStroke(e.getPoint());
+                strokeManager.endStroke();
                 drawingPanel.repaint();
             }
         });
