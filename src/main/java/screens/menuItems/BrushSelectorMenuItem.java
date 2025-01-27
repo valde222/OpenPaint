@@ -1,5 +1,7 @@
 package screens.menuItems;
 
+import brushes.BrushType;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,7 +13,10 @@ public class BrushSelectorMenuItem extends AbstractMenuItem {
         JLabel brushLabel = new JLabel("Brush:");
         brushLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 
-        String[] brushes = { "Freehand", "Straight Line" };
+        String[] brushes = new String[BrushType.values().length];
+        for (int i = 0; i < BrushType.values().length; i++) {
+            brushes[i] = BrushType.values()[i].getName();
+        }
         JComboBox<String> brushSelector = new JComboBox<>(brushes);
         brushSelector.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 
@@ -23,10 +28,11 @@ public class BrushSelectorMenuItem extends AbstractMenuItem {
 
         brushSelector.addActionListener(e -> {
             String selectedBrush = (String) brushSelector.getSelectedItem();
-            if ("Freehand".equals(selectedBrush)) {
-                strokeManager.setBrushType("FREEHAND");
-            } else if ("Straight Line".equals(selectedBrush)) {
-                strokeManager.setBrushType("STRAIGHT_LINE");
+            for (BrushType brushType : BrushType.values()) {
+                if (brushType.getName().equals(selectedBrush)) {
+                    strokeManager.setBrushType(brushType);
+                    break;
+                }
             }
         });
 

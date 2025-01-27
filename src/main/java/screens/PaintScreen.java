@@ -20,24 +20,22 @@ public class PaintScreen extends JFrame {
             }
         };
 
-        addDrawingListeners(drawingPanel);
+        addDrawingListeners();
     }
 
 
-    private void addDrawingListeners(JPanel drawingPanel) {
+    private void addDrawingListeners() {
         drawingPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 strokeManager.startStroke(e.getPoint());
-                if ("FREEHAND".equals(strokeManager.getBrushType())) {
-                    strokeManager.addPointToStroke(e.getPoint());
-                }
+                strokeManager.updateStroke(e.getPoint());
                 drawingPanel.repaint();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                strokeManager.endStroke(e.getPoint());
+                strokeManager.endStroke();
                 drawingPanel.repaint();
             }
         });
@@ -45,12 +43,7 @@ public class PaintScreen extends JFrame {
         drawingPanel.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if ("FREEHAND".equals(strokeManager.getBrushType())) {
-                    strokeManager.addPointToStroke(e.getPoint());
-                } else if ("STRAIGHT_LINE".equals(strokeManager.getBrushType())) {
-                    // Update the temporary endpoint for line preview
-                    strokeManager.updateTemporaryEndPoint(e.getPoint());
-                }
+                strokeManager.updateStroke(e.getPoint());
                 drawingPanel.repaint();
             }
         });

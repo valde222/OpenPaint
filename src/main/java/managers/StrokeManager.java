@@ -1,5 +1,7 @@
 package managers;
 
+import brushes.BrushType;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -12,9 +14,7 @@ public class StrokeManager {
 
     private final StrokeProperty defaultStrokeProperty = new StrokeProperty();
 
-    private String brushType = "FREEHAND";
-
-    private Point temporaryEndPoint;
+    private BrushType brushType = BrushType.FREEHAND;
 
     private StrokeManager() {}
 
@@ -25,11 +25,8 @@ public class StrokeManager {
         return instance;
     }
 
-    public void setBrushType(String brushType) {
+    public void setBrushType(BrushType brushType) {
         this.brushType = brushType;
-    }
-    public String getBrushType() {
-        return brushType;
     }
 
     public void startStroke(Point initialPoint) {
@@ -38,31 +35,24 @@ public class StrokeManager {
                 defaultStrokeProperty.getStrokeColor()
         ));
         currentStroke.addPoint(initialPoint);
-        strokes.add(currentStroke);
-
-        temporaryEndPoint = null;
     }
 
-    public void updateTemporaryEndPoint(Point currentPoint) {
-        if ("STRAIGHT_LINE".equals(brushType)) {
-            temporaryEndPoint = currentPoint;
+    public void endStroke() {
+        if (currentStroke != null) {
+            addStroke(currentStroke);
+            currentStroke = null;
         }
     }
 
-    public void endStroke(Point endPoint) {
-        if ("STRAIGHT_LINE".equals(brushType) && currentStroke != null) {
-            currentStroke.addPoint(endPoint);
+    public void updateStroke(Point currentPoint) {
+        if (currentStroke != null) {
+            this.currentStroke = this.brushType.getBrush().updateStroke(currentPoint, currentStroke);
         }
-        currentStroke = null;
-        temporaryEndPoint = null;
+
     }
 
-    public void addPointToStroke(Point point) {
-        if ("FREEHAND".equals(brushType)) {
-            if (currentStroke != null) {
-                currentStroke.addPoint(point);
-            }
-        }
+    public void addStroke(StrokeData stroke) {
+        strokes.add(stroke);
     }
 
     public void undoLastStroke() {
@@ -75,35 +65,28 @@ public class StrokeManager {
         Graphics2D g2d = (Graphics2D) g;
 
         for (StrokeData stroke : strokes) {
-            StrokeProperty props = stroke.getStrokeProperty();
-            g2d.setColor(props.getStrokeColor());
-            g2d.setStroke(new BasicStroke(
-                    props.getLineThickness(),
-                    BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_ROUND
-            ));
-
-            java.util.List<Point> points = stroke.getPoints();
-            if (points.size() > 1) {
-                for (int i = 1; i < points.size(); i++) {
-                    Point p1 = points.get(i - 1);
-                    Point p2 = points.get(i);
-                    g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
-                }
-            }
+            drawStroke(g2d, stroke);
         }
 
-        if ("STRAIGHT_LINE".equals(brushType) && currentStroke != null && temporaryEndPoint != null) {
-            StrokeProperty props = currentStroke.getStrokeProperty();
-            g2d.setColor(props.getStrokeColor());
-            g2d.setStroke(new BasicStroke(
-                    props.getLineThickness(),
-                    BasicStroke.CAP_ROUND,
-                    BasicStroke.JOIN_ROUND
-            ));
+        if (currentStroke != null) {
+            drawStroke(g2d, currentStroke);
+        }
+    }
 
-            Point startPoint = currentStroke.getPoints().getFirst();
-            g2d.drawLine(startPoint.x, startPoint.y, temporaryEndPoint.x, temporaryEndPoint.y);
+    private void drawStroke(Graphics2D g2d, StrokeData stroke) {
+        StrokeProperty props = stroke.getStrokeProperty();
+        g2d.setColor(props.getStrokeColor());
+        g2d.setStroke(new BasicStroke(
+                props.getLineThickness(),
+                BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_ROUND
+        ));
+
+        java.util.List<Point> points = stroke.getPoints();
+        for (int i = 1; i < points.size(); i++) {
+            Point p1 = points.get(i - 1);
+            Point p2 = points.get(i);
+            g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
         }
     }
 
