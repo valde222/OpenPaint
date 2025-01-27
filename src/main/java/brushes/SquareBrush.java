@@ -5,8 +5,6 @@ import managers.StrokeData;
 import java.awt.*;
 
 public class SquareBrush extends AbstractBrush {
-    private final String name = "Square";
-
     public SquareBrush() {
         super("Square");
     }
@@ -26,10 +24,5 @@ public class SquareBrush extends AbstractBrush {
             currentStroke.addPoint(startPoint);
         }
         return currentStroke;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 }

@@ -1,7 +1,7 @@
 package brushes;
 
 public abstract class AbstractBrush implements Brush {
-    private String name;
+    private final String name;
 
     public AbstractBrush(String name) {
         this.name = name;

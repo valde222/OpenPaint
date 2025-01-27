@@ -1,14 +1,10 @@
 package brushes;
 
 import managers.StrokeData;
-import managers.StrokeProperty;
 
 import java.awt.*;
-import java.util.List;
 
 public class StraightLineBrush extends AbstractBrush {
-    private final String name = "Straight Line";
-
 
     public StraightLineBrush() {
         super("Straight Line");
@@ -22,10 +18,5 @@ public class StraightLineBrush extends AbstractBrush {
             currentStroke.getPoints().set(1, currentPoint);
         }
         return currentStroke;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 }
