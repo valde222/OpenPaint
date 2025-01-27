@@ -2,7 +2,8 @@ package brushes;
 
 public enum BrushType {
     FREEHAND(new FreeHandBrush()),
-    STRAIGHT_LINE(new StraightLineBrush());
+    STRAIGHT_LINE(new StraightLineBrush()),
+    SQUARE_BRUSH(new SquareBrush());
 
     private final Brush brush;
 

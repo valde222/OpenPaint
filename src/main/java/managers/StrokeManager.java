@@ -35,21 +35,32 @@ public class StrokeManager {
     }
 
     public void startStroke(Point initialPoint) {
-        this.brushType.getBrush().startStroke(initialPoint, defaultStrokeProperty);
+        currentStroke = new StrokeData(new ArrayList<>(), new StrokeProperty(
+                defaultStrokeProperty.getLineThickness(),
+                defaultStrokeProperty.getStrokeColor()
+        ));
+        currentStroke.addPoint(initialPoint);
+        System.out.println("Start Stroke");
     }
 
     public void endStroke(Point endPoint) {
-        this.brushType.getBrush().endStroke(endPoint);
-        System.out.println(strokes.size());
+        if (currentStroke != null) {
+            currentStroke.addPoint(endPoint);
+            addStroke(currentStroke);
+            System.out.println("End Stroke");
+            System.out.println(currentStroke.getPoints().size());
+            currentStroke = null;
+        }
     }
 
     public void updateStroke(Point currentPoint) {
-        this.brushType.getBrush().updateStroke(currentPoint);
+        if (currentStroke != null) {
+            this.currentStroke = this.brushType.getBrush().updateStroke(currentPoint, currentStroke);
+        }
+
     }
 
     public void addStroke(StrokeData stroke) {
-        System.out.println("Adding stroke");
-        System.out.println(stroke.getPoints().size());
         strokes.add(stroke);
     }
 
@@ -72,6 +83,25 @@ public class StrokeManager {
 
 
             java.util.List<Point> points = stroke.getPoints();
+
+            if (points.size() > 1) {
+                for (int i = 1; i < points.size(); i++) {
+                    Point p1 = points.get(i - 1);
+                    Point p2 = points.get(i);
+                    g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
+                }
+            }
+        }
+        if (currentStroke != null) {
+            StrokeProperty props = currentStroke.getStrokeProperty();
+            g2d.setColor(props.getStrokeColor());
+            g2d.setStroke(new BasicStroke(
+                    props.getLineThickness(),
+                    BasicStroke.CAP_ROUND,
+                    BasicStroke.JOIN_ROUND
+            ));
+
+            java.util.List<Point> points = currentStroke.getPoints();
 
             if (points.size() > 1) {
                 for (int i = 1; i < points.size(); i++) {
