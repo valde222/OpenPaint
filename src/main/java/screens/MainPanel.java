@@ -24,7 +24,7 @@ public class MainPanel extends JFrame{
         mainPanel.add(menuPanel, BorderLayout.NORTH);
         mainPanel.add(drawingPanel, BorderLayout.CENTER);
 
-        keystrokeManager.setupUndoShortcut(drawingPanel);
+        keystrokeManager.setupShortcuts(drawingPanel);
 
         setContentPane(mainPanel);
         setVisible(true);

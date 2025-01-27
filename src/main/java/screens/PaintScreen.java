@@ -41,7 +41,6 @@ public class PaintScreen extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (strokeManager.getMoveToolActive()) {
-                    strokeManager.moveStrokeEnd();
                     drawingPanel.repaint();
                     return;
                 }

@@ -64,7 +64,11 @@ public class StrokeManager {
 
     public void undoLastStroke() {
         if (!strokes.isEmpty()) {
-            strokes.removeLast();
+            if (strokes.getLast() == selectedStroke) {
+                deleteSelectedStroke();
+            } else {
+                strokes.removeLast();
+            }
         }
     }
 
@@ -125,6 +129,8 @@ public class StrokeManager {
                     initialPoints.add(new Point(p));
                 }
                 return;
+            } else {
+                moveStrokeEnd();
             }
         }
     }
@@ -174,6 +180,13 @@ public class StrokeManager {
         return distance <= threshold;
     }
 
+    public void deleteSelectedStroke() {
+        if (selectedStroke != null) {
+            strokes.remove(selectedStroke);
+            moveStrokeEnd();
+        }
+    }
+
     public void setLineThickness(int lineThickness) {
         defaultStrokeProperty.setLineThickness(lineThickness);
     }
@@ -188,5 +201,9 @@ public class StrokeManager {
 
     public Boolean getMoveToolActive() {
         return MoveToolActive;
+    }
+
+    public StrokeData getSelectedStroke() {
+        return selectedStroke;
     }
 }
