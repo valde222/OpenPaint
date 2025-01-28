@@ -1,7 +1,5 @@
 package brushes;
 
-import Interfaces.Brush;
-
 public abstract class AbstractBrush implements Brush {
     private final String name;
 

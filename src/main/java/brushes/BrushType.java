@@ -1,7 +1,5 @@
 package brushes;
 
-import Interfaces.Brush;
-
 public enum BrushType {
     FREEHAND(new FreeHandBrush()),
     STRAIGHT_LINE(new StraightLineBrush()),

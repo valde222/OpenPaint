@@ -1,10 +1,10 @@
 package screens;
 
-import Interfaces.MenuItemProducer;
-import screens.menuItems.ColorPickerMenuItem;
-import screens.menuItems.LineThicknessMenuItem;
-import screens.menuItems.BrushSelectorMenuItem;
-import screens.menuItems.MoveToolMenuMenuItem;
+import menuItems.MenuItemProducer;
+import menuItems.ColorPickerMenuItem;
+import menuItems.LineThicknessMenuItem;
+import menuItems.BrushSelectorMenuItem;
+import menuItems.MoveToolMenuMenuItem;
 
 import javax.swing.*;
 import java.awt.*;

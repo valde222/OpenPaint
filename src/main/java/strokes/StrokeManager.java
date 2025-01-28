@@ -1,4 +1,4 @@
-package managers;
+package strokes;
 
 import brushes.BrushType;
 

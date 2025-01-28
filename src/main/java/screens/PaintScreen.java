@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import managers.StrokeManager;
+import strokes.StrokeManager;
 
 public class PaintScreen extends JFrame {
 

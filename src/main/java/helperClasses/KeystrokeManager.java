@@ -1,4 +1,6 @@
-package managers;
+package helperClasses;
+
+import strokes.StrokeManager;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

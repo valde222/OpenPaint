@@ -1,6 +1,6 @@
 package brushes;
 
-import managers.StrokeData;
+import strokes.StrokeData;
 
 import java.awt.*;
 

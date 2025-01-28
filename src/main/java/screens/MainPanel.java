@@ -1,6 +1,6 @@
 package screens;
 
-import managers.KeystrokeManager;
+import helperClasses.KeystrokeManager;
 
 import javax.swing.*;
 import java.awt.*;

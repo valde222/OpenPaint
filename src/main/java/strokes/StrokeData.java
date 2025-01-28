@@ -1,4 +1,4 @@
-package managers;
+package strokes;
 
 import java.awt.*;
 import java.util.List;

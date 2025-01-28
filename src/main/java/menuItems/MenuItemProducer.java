@@ -1,4 +1,4 @@
-package Interfaces;
+package menuItems;
 
 import javax.swing.*;
 

@@ -1,7 +1,6 @@
-package screens.menuItems;
+package menuItems;
 
-import Interfaces.MenuItemProducer;
-import managers.StrokeManager;
+import strokes.StrokeManager;
 
 import javax.swing.*;
 import java.awt.*;

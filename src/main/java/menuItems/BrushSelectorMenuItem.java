@@ -1,4 +1,4 @@
-package screens.menuItems;
+package menuItems;
 
 import brushes.BrushType;
 
