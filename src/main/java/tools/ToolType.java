@@ -1,7 +1,8 @@
 package tools;
 
 public enum ToolType {
-    MOVE_TOOL(new MoveTool());
+    MOVE_TOOL(new MoveTool()),
+    DRAWING_TOOL(new DrawingTool());
 
     private final Tool tool;
 

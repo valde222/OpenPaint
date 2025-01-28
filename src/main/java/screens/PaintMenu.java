@@ -4,7 +4,7 @@ import menuItems.MenuItemProducer;
 import menuItems.ColorPickerMenuItem;
 import menuItems.LineThicknessMenuItem;
 import menuItems.BrushSelectorMenuItem;
-import menuItems.MoveToolMenuMenuItem;
+import menuItems.ToolMenuMenuItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public class PaintMenu {
                 new LineThicknessMenuItem(),
                 new ColorPickerMenuItem(),
                 new BrushSelectorMenuItem(),
-                new MoveToolMenuMenuItem()
+                new ToolMenuMenuItem()
         );
 
         for (MenuItemProducer menuItem : menuItems) {
