@@ -1,6 +1,8 @@
 package strokes;
 
 import brushes.BrushType;
+import tools.MoveTool;
+import tools.ToolType;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -20,8 +22,8 @@ public class StrokeManager {
 
     private Boolean MoveToolActive = false;
     private StrokeData selectedStroke;
-    private Point initialPoint;
-    private List<Point> initialPoints;
+
+    private ToolType toolType = ToolType.MOVE_TOOL;
 
     private StrokeManager() {}
 
@@ -120,64 +122,20 @@ public class StrokeManager {
     }
 
     public void moveStrokeStart(Point point) {
-        for (StrokeData stroke : strokes) {
-            if (isPointOnStroke(point, stroke)) {
-                selectedStroke = stroke;
-                initialPoint = point;
-                initialPoints = new ArrayList<>();
-                for (Point p : stroke.getPoints()) {
-                    initialPoints.add(new Point(p));
-                }
-                return;
-            } else {
-                moveStrokeEnd();
-            }
-        }
+        toolType.getTool().onMousePress(point);
     }
 
     public void moveStroke(Point point) {
-        if (selectedStroke != null && initialPoint != null) {
-            int pointDifferenceX = point.x - initialPoint.x;
-            int pointDifferenceY = point.y - initialPoint.y;
-            List<Point> points = selectedStroke.getPoints();
-            for (int i = 0; i < points.size(); i++) {
-                Point initialP = initialPoints.get(i);
-                points.get(i).setLocation(initialP.x + pointDifferenceX, initialP.y + pointDifferenceY);
-            }
-        }
+        toolType.getTool().onMouseDrag(point);
     }
 
     public void moveStrokeEnd() {
-        selectedStroke = null;
-        initialPoint = null;
-        initialPoints = null;
+        toolType.getTool().onMouseRelease(null);
     }
 
     public boolean isPointOnStroke(Point point) {
-        for (StrokeData stroke : strokes) {
-            if (isPointOnStroke(point, stroke)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isPointOnStroke(Point point, StrokeData stroke) {
-        int threshold = 10;
-        List<Point> points = stroke.getPoints();
-        for (int i = 1; i < points.size(); i++) {
-            Point p1 = points.get(i - 1);
-            Point p2 = points.get(i);
-            if (isPointNearLine(point, p1, p2, threshold)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isPointNearLine(Point p, Point p1, Point p2, int threshold) {
-        double distance = Line2D.ptSegDist(p1.x, p1.y, p2.x, p2.y, p.x, p.y);
-        return distance <= threshold;
+        MoveTool moveTool = new MoveTool();
+        return moveTool.isPointOnStroke(point, strokes);
     }
 
     public void deleteSelectedStroke() {
@@ -196,6 +154,9 @@ public class StrokeManager {
     }
 
     public void setMoveToolActive(Boolean MoveToolActive) {
+        if (!MoveToolActive) {
+            selectedStroke = null;
+        }
         this.MoveToolActive = MoveToolActive;
     }
 
@@ -205,5 +166,18 @@ public class StrokeManager {
 
     public StrokeData getSelectedStroke() {
         return selectedStroke;
+    }
+
+    public List<StrokeData> getStrokes() {
+        return strokes;
+    }
+
+    public void updateSpecificStroke(StrokeData stroke) {
+        strokes.remove(stroke);
+        strokes.add(stroke);
+    }
+
+    public void setSelectedStroke(StrokeData stroke) {
+        selectedStroke = stroke;
     }
 }
