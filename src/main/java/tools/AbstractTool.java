@@ -41,7 +41,7 @@ public abstract class AbstractTool implements Tool{
         return false;
     }
 
-    private boolean isPointNearLine(Point p, Point p1, Point p2, int threshold) {
+    boolean isPointNearLine(Point p, Point p1, Point p2, int threshold) {
         double distance = Line2D.ptSegDist(p1.x, p1.y, p2.x, p2.y, p.x, p.y);
         return distance <= threshold;
     }

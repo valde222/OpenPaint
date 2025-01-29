@@ -3,8 +3,12 @@ package screens;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
+import strokes.StrokeData;
 import strokes.StrokeManager;
+import tools.EditingTool;
+import tools.Tool;
 import tools.ToolType;
 
 public class PaintScreen extends JFrame {
@@ -18,10 +22,22 @@ public class PaintScreen extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 strokeManager.drawStrokes(g);
+                highlightPoints(g);
             }
         };
 
         addDrawingListeners();
+    }
+
+    private void highlightPoints(Graphics g) {
+        Tool currentTool = strokeManager.getToolType().getTool();
+        if (currentTool instanceof EditingTool && ((EditingTool) currentTool).getSelectedStroke() != null) {
+            StrokeData stroke = ((EditingTool) currentTool).getSelectedStroke();
+            g.setColor(Color.RED);
+            for (Point point : stroke.getPoints()) {
+                g.fillOval(point.x - 3, point.y - 3, 6, 6);
+            }
+        }
     }
 
 
@@ -29,24 +45,12 @@ public class PaintScreen extends JFrame {
         drawingPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                /*if (strokeManager.getMoveToolActive()) {
-                    strokeManager.moveStrokeStart(e.getPoint());
-                    drawingPanel.repaint();
-                    return;
-                }
-                strokeManager.startStroke(e.getPoint());
-                strokeManager.updateStroke(e.getPoint());*/
                 strokeManager.onMouseClick(e.getPoint());
                 drawingPanel.repaint();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                /*if (strokeManager.getMoveToolActive()) {
-                    drawingPanel.repaint();
-                    return;
-                }
-                strokeManager.endStroke();*/
                 strokeManager.onMouseRelease(e.getPoint());
                 drawingPanel.repaint();
             }
@@ -55,12 +59,6 @@ public class PaintScreen extends JFrame {
         drawingPanel.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                /*if (strokeManager.getMoveToolActive()) {
-                    strokeManager.moveStroke(e.getPoint());
-                    drawingPanel.repaint();
-                    return;
-                }
-                strokeManager.updateStroke(e.getPoint());*/
                 strokeManager.onMouseDrag(e.getPoint());
                 drawingPanel.repaint();
 
